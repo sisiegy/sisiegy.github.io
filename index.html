@@ -1,32 +1,206 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <title>HomePage</title>
-    <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-        }
-        .center-container {
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GWA Calculator</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+   body {
+      padding: 20px;
+      transition: background-color 0.3s, color 0.3s;
+      font-family: 'Poppins', sans-serif;
+    }
+    .dark-mode {
+      background-color: #212121;
+      color: #f5f5f5;
+    }
+    .dark-mode .table {
+      background-color: #1e1e1e;
+      color: #f5f5f5;
+    }
+    .dark-mode .table thead {
+      background-color: #343a40;
+    }
+    .dark-mode .btn-primary {
+      background-color: #7851A9;
+      border-color: #555;
+    }
+    .subject-entry {
+      margin-bottom: 15px;
+    }
+    #add-subject {
+      margin-top: 10px;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+  </style>
 </head>
 <body>
-    <div class="container center-container">
-        <button type="button" class="btn btn-primary btn-lg" onclick="goToCalculator()">Final Grade Average Calculator</button>
+    <div class="container my-5">
+        <div class="header d-flex justify-content-between">
+            <h4 style="cursor: pointer;" onclick="goHome()">sgfrdgrln<h4>
+            <i class="fas fa-moon icon" id="darkModeIcon"></i>
+        </div>
+          <a href="/final-average-calculator">Try Final Average Calculator!</a>
+          <h1 class="text-center mb-2">GWA Calculator</h1>
+          <p class="text-center mb-4">This calculator will help you determine your general weighted average.</p>
+
+  <form id="gwa-form">
+    <div id="subjects-container">
+      <div class="row g-3 align-items-center subject-entry">
+        <div class="col-md-4">
+          <input type="text" class="form-control" name="subject_name[]" placeholder="Subject Name (Optional)">
+        </div>
+        <div class="col-md-3">
+          <input type="number" class="form-control" name="grade[]" placeholder="Grade" min="0" max="100" step="0.01" required>
+        </div>
+        <div class="col-md-3">
+          <input type="number" class="form-control" name="unit[]" placeholder="Units" min="1" step="1" required>
+        </div>
+        <div class="col-md-2">
+          <button type="button" class="btn btn-danger remove-subject">Remove</button>
+        </div>
+      </div>
+      <div class="row g-3 align-items-center subject-entry">
+        <div class="col-md-4">
+          <input type="text" class="form-control" name="subject_name[]" placeholder="Subject Name (Optional)">
+        </div>
+        <div class="col-md-3">
+          <input type="number" class="form-control" name="grade[]" placeholder="Grade" min="0" max="100"step="0.01" required>
+        </div>
+        <div class="col-md-3">
+          <input type="number" class="form-control" name="unit[]" placeholder="Units" min="1" step="1" required>
+        </div>
+        <div class="col-md-2">
+          <button type="button" class="btn btn-danger remove-subject">Remove</button>
+        </div>
+      </div>
+      <div class="row g-3 align-items-center subject-entry">
+        <div class="col-md-4">
+          <input type="text" class="form-control" name="subject_name[]" placeholder="Subject Name (Optional)" >
+        </div>
+        <div class="col-md-3">
+          <input type="number" class="form-control" name="grade[]" placeholder="Grade" min="0" max="100" step="0.01" required>
+        </div>
+        <div class="col-md-3">
+          <input type="number" class="form-control" name="unit[]" placeholder="Units" min="1" step="1" required>
+        </div>
+        <div class="col-md-2">
+          <button type="button" class="btn btn-danger remove-subject">Remove</button>
+        </div>
+      </div>
     </div>
-   
-    <script>
-        function goToCalculator() {
-            window.location.href = "https://sisiegy.github.io/final-average-calculator/";
-        }
-    </script>
+
+    <div class="d-flex justify-content-between mt-3">
+        <button type="button" id="reset-form" class="btn btn-primary">Reset</button>
+      <button type="button" id="add-subject" class="btn btn-primary">Add Subject</button>
+    </div>
+
+    <div class="text-center mt-4">
+      <button type="submit" class="btn btn-success">Calculate GWA</button>
+    </div>
+  </form>
+
+  <div id="result" class="alert alert-info mt-4 d-none">
+    Your GWA is: <span id="gwa-result"></span>
+  </div>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+
+    function goHome() {
+        window.location.href = "index.html";
+    }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const subjectsContainer = document.getElementById('subjects-container');
+    const addSubjectBtn = document.getElementById('add-subject');
+    const resetFormBtn = document.getElementById('reset-form');
+    const gwaForm = document.getElementById('gwa-form');
+    const resultDiv = document.getElementById('result');
+    const gwaResult = document.getElementById('gwa-result');
+
+    addSubjectBtn.addEventListener('click', () => {
+      const subjectEntry = document.createElement('div');
+      subjectEntry.classList.add('row', 'g-3', 'align-items-center', 'subject-entry');
+      subjectEntry.innerHTML = `
+        <div class="col-md-4">
+          <input type="text" class="form-control" name="subject_name[]" placeholder="Subject Name (Optional)">
+        </div>
+        <div class="col-md-3">
+          <input type="number" class="form-control" name="grade[]" placeholder="Grade" min="0" max="100" step="0.01" required>
+        </div>
+        <div class="col-md-3">
+          <input type="number" class="form-control" name="unit[]" placeholder="Units" min="1" step="1" required>
+        </div>
+        <div class="col-md-2">
+          <button type="button" class="btn btn-danger remove-subject">Remove</button>
+        </div>
+      `;
+      subjectsContainer.appendChild(subjectEntry);
+    });
+
+    resetFormBtn.addEventListener('click', () => {
+      gwaForm.reset();
+      resultDiv.classList.add('d-none');
+      gwaResult.textContent = '';
+    });
+
+    subjectsContainer.addEventListener('click', (e) => {
+      if (e.target.classList.contains('remove-subject')) {
+        e.target.closest('.subject-entry').remove();
+      }
+    });
+
+    gwaForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const grades = Array.from(document.getElementsByName('grade[]')).map(input => parseFloat(input.value));
+      const units = Array.from(document.getElementsByName('unit[]')).map(input => parseFloat(input.value));
+
+      if (grades.length === 0 || units.length === 0) {
+        alert('Please add at least one subject before calculating GWA.');
+        return;
+      }
+
+      let totalWeightedGrade = 0;
+      let totalUnits = 0;
+
+      grades.forEach((grade, index) => {
+        totalWeightedGrade += grade * units[index];
+        totalUnits += units[index];
+      });
+
+      const gwa = (totalWeightedGrade / totalUnits).toFixed(2);
+      gwaResult.textContent = gwa;
+      resultDiv.classList.remove('d-none');
+    });
+
+    document.getElementById('darkModeIcon').addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+
+      if (document.body.classList.contains('dark-mode')) {
+        document.getElementById('darkModeIcon').classList.remove('fa-moon');
+        document.getElementById('darkModeIcon').classList.add('fa-sun');
+      } else {
+        document.getElementById('darkModeIcon').classList.remove('fa-sun');
+        document.getElementById('darkModeIcon').classList.add('fa-moon');
+      }
+    });
+  });
+
+  
+
+  
+</script>
 </body>
 </html>
